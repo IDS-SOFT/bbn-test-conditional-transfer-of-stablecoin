@@ -10,7 +10,7 @@ contract ConditionalTransfer {
     address public recipient;
     bool public condition;   // The condition for the transfer : 1 - True, 0 - False
     uint256 public amount;     // The amount to transfer
-    event CheckBalance(string text, uint amount);
+    event CheckBalance(uint amount);
 
     constructor(
         address _stablecoin,
@@ -27,6 +27,7 @@ contract ConditionalTransfer {
 
     // This function allows the owner to change the recipient address
     function changeRecipient(address newRecipient) public {
+        require(newRecipient != address(0), "Invalid recipient address");
         require(msg.sender == owner, "Only the owner can change the recipient");
         recipient = newRecipient;
     }
@@ -60,11 +61,9 @@ contract ConditionalTransfer {
     }
     
     function getBalance(address user_account) external returns (uint){
-    
-       string memory data = "User Balance is : ";
-       uint user_bal = user_account.balance;
-       emit CheckBalance(data, user_bal );
-       return (user_bal);
-
+        require(user_account != address(0), "Invalid recipient address");
+        uint user_bal = user_account.balance;
+        emit CheckBalance(user_bal);
+        return (user_bal);
     }
 }
